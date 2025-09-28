@@ -1,0 +1,95 @@
+name: Resume Ranking Workflow
+
+on:
+  # Trigger when issues are opened, edited, or milestoned
+  issues:
+    types: [opened, edited, milestoned]
+
+  # Trigger when code is pushed to main or branchNamePath
+  push:
+    branches:
+      - main
+      - branchNamePath
+
+  # Trigger when a PR is opened into branchNamePath
+  pull_request:
+    types: [opened]
+    branches:
+      - branchNamePath
+
+  # Allow other workflows to call this one with inputs
+  workflow_call:
+    inputs:
+      username:
+        description: "Login username for testing"
+        required: false
+        type: string
+        default: "Shinigami"
+
+      email:
+        description: "Test email"
+        required: true
+        type: string
+        default: "titengtabinge123@gmail.com"
+
+      password:
+        description: "Test password"
+        required: true
+        type: string
+        default: "titengtabinge123"
+
+      confirm_password:
+        description: "Confirmation password"
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build & Install Dependencies
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+  running_check:
+    name: Running Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run sample command
+        run: echo "Running check complete on ${{ runner.os }}"
