@@ -1,6 +1,8 @@
 name: Resume Ranking Workflow
 
 on:
+  # For Manual Testing to tho Automated den
+  workflow_dispatch:
   # Trigger when issues are opened, edited, or milestoned
   issues:
     types: [opened, edited, milestoned]
